@@ -15,9 +15,19 @@ pipeline{
     }
 
     stage('Push image'){
+      environment{
+         DOCKER_HUB = credentials('dockerhub-creds')
+      }
       steps{
-        sh "docker push silver3456/selenium ."
+        sh 'echo ${DOCKER_HUB_PSW} | docker login -u ${DOCKER_HUB_USR} --password-stdin'
+        sh "docker push silver3456/selenium"
       }
     }
+  }
+
+  post {
+     always {
+        sh "docker logout"
+     }
   }
 }
